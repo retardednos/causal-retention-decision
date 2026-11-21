@@ -1,0 +1,17 @@
+offer_cost,budget,best_strategy,uplift_net_value,churn_net_value,random_net_value
+5,5%,Uplift targeting,853.4,459.9,-118.2
+5,10%,Uplift targeting,1440.8,956.5,-231.8
+5,20%,Uplift targeting,2185.6,1577.3,-351.1
+5,30%,Uplift targeting,2519.1,1893.9,-536.5
+10,5%,Uplift targeting,603.4,209.9,-368.2
+10,10%,Uplift targeting,940.8,456.5,-731.8
+10,20%,Uplift targeting,1185.6,577.3,-1351.1
+10,30%,Uplift targeting,1019.1,393.9,-2036.5
+20,5%,Uplift targeting,103.4,-290.1,-868.2
+20,10%,No offer,-59.2,-543.5,-1731.8
+20,20%,No offer,-78.8,-1422.7,-3351.1
+20,30%,No offer,-78.8,-2606.1,-5036.5
+40,5%,Uplift targeting,0.0,-1290.1,-1868.2
+40,10%,Uplift targeting,0.0,-2543.5,-3731.8
+40,20%,Uplift targeting,0.0,-5422.7,-7351.1
+40,30%,Uplift targeting,0.0,-8606.1,-11036.5

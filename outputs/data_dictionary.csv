@@ -1,0 +1,12 @@
+column,type,role,description
+subscriber_id,int,id,Unique id of the subscriber
+tenure_months,int,pre-treatment feature,Months the person has been subscribed
+plan_tier,int,pre-treatment feature,0=basic 1=standard 2=premium
+recent_usage,float,pre-treatment feature,Product usage score 0-100 in recent weeks
+support_tickets,int,pre-treatment feature,Support tickets in last 90 days
+late_payments,int,pre-treatment feature,Late payments in payment history
+offer_sent,int,TREATMENT,1 if a retention offer was sent else 0 (opens/redemptions deliberately NOT included)
+renewed_30d,int,OUTCOME,1 if renewed within 30 days of the decision date (same window for both groups)
+p0_true,float,EVALUATION-ONLY ground truth,True renewal probability if NO offer sent
+p1_true,float,EVALUATION-ONLY ground truth,True renewal probability if offer SENT
+true_uplift,float,EVALUATION-ONLY ground truth,p1_true - p0_true

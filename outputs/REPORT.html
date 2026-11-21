@@ -1,0 +1,449 @@
+<html><head><meta charset='utf-8'><style>body{font-family:Arial;max-width:900px;margin:40px auto;line-height:1.5}table{border-collapse:collapse;font-size:12px}td,th{border:1px solid #ccc;padding:4px 8px}</style></head><body><h1>Causal AI for Counterfactual Decision Intelligence - Results</h1>
+<p>Settings: seed=42, subscribers=8000, budget=20%, renewal margin=100.0, offer cost=10.0</p>
+<h2>1. Raw comparison (the trap)</h2>
+<ul>
+<li>Renewal rate WITH offer:    72.2%</li>
+<li>Renewal rate WITHOUT offer: 75.3%</li>
+<li>Naive difference: -3.2 percentage points (misleading: offers went to low-usage / support-issue customers who renew less anyway)</li>
+</ul>
+<p>Average features by group:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">offer_sent</th>
+<th style="text-align: right;">recent_usage</th>
+<th style="text-align: right;">support_tickets</th>
+<th style="text-align: right;">tenure_months</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">60.4</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">30.35</td>
+</tr>
+<tr>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">43.96</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">29.82</td>
+</tr>
+</tbody>
+</table>
+<h2>2. Overlap check</h2>
+<ul>
+<li>Customers with weak overlap (propensity outside 0.05-0.95): 394 of 8000 (4.9%)</li>
+</ul>
+<h2>3. Average effect of sending an offer (percentage points)</h2>
+<ul>
+<li>Naive (unadjusted):        -3.16</li>
+<li>Doubly robust (cross-fit): +4.93   (95% CI +2.36 to +7.50)</li>
+<li>TRUE average effect:       +3.31</li>
+<li>Error of DR estimate: 1.62 pp, error of naive: 6.47 pp</li>
+</ul>
+<h2>4. How well does each model find uplift? (on held-out customers)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">model</th>
+<th style="text-align: right;">correlation_with_truth</th>
+<th style="text-align: right;">RMSE_pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">T-learner</td>
+<td style="text-align: right;">0.734</td>
+<td style="text-align: right;">10.75</td>
+</tr>
+<tr>
+<td style="text-align: left;">DR-learner</td>
+<td style="text-align: right;">0.647</td>
+<td style="text-align: right;">11.13</td>
+</tr>
+<tr>
+<td style="text-align: left;">Causal forest</td>
+<td style="text-align: right;">0.846</td>
+<td style="text-align: right;">5.83</td>
+</tr>
+</tbody>
+</table>
+<p>Uplift by score band (Causal forest = our decision model) - estimate should rise together with the truth:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">band</th>
+<th style="text-align: right;">est_uplift_pp</th>
+<th style="text-align: right;">true_uplift_pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Q1 lowest</td>
+<td style="text-align: right;">-9.08</td>
+<td style="text-align: right;">-4.58</td>
+</tr>
+<tr>
+<td style="text-align: left;">Q2</td>
+<td style="text-align: right;">-1.25</td>
+<td style="text-align: right;">-2.23</td>
+</tr>
+<tr>
+<td style="text-align: left;">Q3</td>
+<td style="text-align: right;">4.55</td>
+<td style="text-align: right;">0.59</td>
+</tr>
+<tr>
+<td style="text-align: left;">Q4</td>
+<td style="text-align: right;">10.18</td>
+<td style="text-align: right;">6.12</td>
+</tr>
+<tr>
+<td style="text-align: left;">Q5 highest</td>
+<td style="text-align: right;">20.44</td>
+<td style="text-align: right;">15.93</td>
+</tr>
+</tbody>
+</table>
+<h2>5. Representative customer profiles (estimates for SIMILAR customers, not verified individual outcomes)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">profile</th>
+<th style="text-align: right;">renew_prob_no_offer</th>
+<th style="text-align: right;">renew_prob_with_offer</th>
+<th style="text-align: right;">est_uplift_pp</th>
+<th style="text-align: right;">propensity</th>
+<th style="text-align: left;">overlap_ok</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">New, low usage, many tickets</td>
+<td style="text-align: right;">0.282</td>
+<td style="text-align: right;">0.346</td>
+<td style="text-align: right;">6.4</td>
+<td style="text-align: right;">0.862</td>
+<td style="text-align: left;">True</td>
+</tr>
+<tr>
+<td style="text-align: left;">1yr basic, low usage</td>
+<td style="text-align: right;">0.459</td>
+<td style="text-align: right;">0.731</td>
+<td style="text-align: right;">27.2</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: left;">True</td>
+</tr>
+<tr>
+<td style="text-align: left;">Average customer</td>
+<td style="text-align: right;">0.725</td>
+<td style="text-align: right;">0.791</td>
+<td style="text-align: right;">6.7</td>
+<td style="text-align: right;">0.212</td>
+<td style="text-align: left;">True</td>
+</tr>
+<tr>
+<td style="text-align: left;">Loyal premium, high usage</td>
+<td style="text-align: right;">0.933</td>
+<td style="text-align: right;">0.877</td>
+<td style="text-align: right;">-5.7</td>
+<td style="text-align: right;">0.05</td>
+<td style="text-align: left;">False</td>
+</tr>
+<tr>
+<td style="text-align: left;">5yr premium, very high usage</td>
+<td style="text-align: right;">0.923</td>
+<td style="text-align: right;">0.879</td>
+<td style="text-align: right;">-4.3</td>
+<td style="text-align: right;">0.04</td>
+<td style="text-align: left;">False</td>
+</tr>
+<tr>
+<td style="text-align: left;">Brand new, very low usage, tickets+late</td>
+<td style="text-align: right;">0.292</td>
+<td style="text-align: right;">0.345</td>
+<td style="text-align: right;">5.3</td>
+<td style="text-align: right;">0.948</td>
+<td style="text-align: left;">True</td>
+</tr>
+</tbody>
+</table>
+<h2>6. Decisions on held-out customers</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">recommended_action</th>
+<th style="text-align: right;">count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">NO OFFER</td>
+<td style="text-align: right;">2387</td>
+</tr>
+<tr>
+<td style="text-align: left;">SEND OFFER</td>
+<td style="text-align: right;">640</td>
+</tr>
+<tr>
+<td style="text-align: left;">MANUAL REVIEW</td>
+<td style="text-align: right;">173</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Routed to manual review (weak overlap): 173</li>
+</ul>
+<h2>7. Policy comparison on held-out set (same 20% limit for every strategy)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: right;">contacted</th>
+<th style="text-align: right;">incremental_renewals_per_1000</th>
+<th style="text-align: right;">net_value_per_1000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">640</td>
+<td style="text-align: right;">31.86</td>
+<td style="text-align: right;">1185.63</td>
+</tr>
+<tr>
+<td style="text-align: left;">Churn-risk targeting</td>
+<td style="text-align: right;">640</td>
+<td style="text-align: right;">25.77</td>
+<td style="text-align: right;">577.28</td>
+</tr>
+<tr>
+<td style="text-align: left;">Random targeting</td>
+<td style="text-align: right;">640</td>
+<td style="text-align: right;">6.49</td>
+<td style="text-align: right;">-1351.15</td>
+</tr>
+<tr>
+<td style="text-align: left;">No offer</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+<h2>8. Repeated over 5 seeds (mean and std)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">strategy</th>
+<th style="text-align: right;">incremental_renewals_per_1000_mean</th>
+<th style="text-align: right;">incremental_renewals_per_1000_std</th>
+<th style="text-align: right;">net_value_per_1000_mean</th>
+<th style="text-align: right;">net_value_per_1000_std</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Churn-risk targeting</td>
+<td style="text-align: right;">25.14</td>
+<td style="text-align: right;">1.67</td>
+<td style="text-align: right;">514.3</td>
+<td style="text-align: right;">167.26</td>
+</tr>
+<tr>
+<td style="text-align: left;">No offer</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Random targeting</td>
+<td style="text-align: right;">6.78</td>
+<td style="text-align: right;">0.63</td>
+<td style="text-align: right;">-1321.88</td>
+<td style="text-align: right;">63.08</td>
+</tr>
+<tr>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">29.03</td>
+<td style="text-align: right;">4.2</td>
+<td style="text-align: right;">1117.46</td>
+<td style="text-align: right;">122.93</td>
+</tr>
+</tbody>
+</table>
+<h2>9. Sensitivity: how the ranking changes with offer cost and budget (net value per 1,000)</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">offer_cost</th>
+<th style="text-align: left;">budget</th>
+<th style="text-align: left;">best_strategy</th>
+<th style="text-align: right;">uplift_net_value</th>
+<th style="text-align: right;">churn_net_value</th>
+<th style="text-align: right;">random_net_value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">5%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">853.4</td>
+<td style="text-align: right;">459.9</td>
+<td style="text-align: right;">-118.2</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">10%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">1440.8</td>
+<td style="text-align: right;">956.5</td>
+<td style="text-align: right;">-231.8</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">20%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">2185.6</td>
+<td style="text-align: right;">1577.3</td>
+<td style="text-align: right;">-351.1</td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">30%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">2519.1</td>
+<td style="text-align: right;">1893.9</td>
+<td style="text-align: right;">-536.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">5%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">603.4</td>
+<td style="text-align: right;">209.9</td>
+<td style="text-align: right;">-368.2</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">10%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">940.8</td>
+<td style="text-align: right;">456.5</td>
+<td style="text-align: right;">-731.8</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">20%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">1185.6</td>
+<td style="text-align: right;">577.3</td>
+<td style="text-align: right;">-1351.1</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">30%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">1019.1</td>
+<td style="text-align: right;">393.9</td>
+<td style="text-align: right;">-2036.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">5%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">103.4</td>
+<td style="text-align: right;">-290.1</td>
+<td style="text-align: right;">-868.2</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">10%</td>
+<td style="text-align: left;">No offer</td>
+<td style="text-align: right;">-59.2</td>
+<td style="text-align: right;">-543.5</td>
+<td style="text-align: right;">-1731.8</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">20%</td>
+<td style="text-align: left;">No offer</td>
+<td style="text-align: right;">-78.8</td>
+<td style="text-align: right;">-1422.7</td>
+<td style="text-align: right;">-3351.1</td>
+</tr>
+<tr>
+<td style="text-align: right;">20</td>
+<td style="text-align: left;">30%</td>
+<td style="text-align: left;">No offer</td>
+<td style="text-align: right;">-78.8</td>
+<td style="text-align: right;">-2606.1</td>
+<td style="text-align: right;">-5036.5</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">5%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-1290.1</td>
+<td style="text-align: right;">-1868.2</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">10%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-2543.5</td>
+<td style="text-align: right;">-3731.8</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">20%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-5422.7</td>
+<td style="text-align: right;">-7351.1</td>
+</tr>
+<tr>
+<td style="text-align: right;">40</td>
+<td style="text-align: left;">30%</td>
+<td style="text-align: left;">Uplift targeting</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">-8606.1</td>
+<td style="text-align: right;">-11036.5</td>
+</tr>
+</tbody>
+</table>
+<h2>10. Weak-overlap scenario (second scenario, extreme historical policy)</h2>
+<ul>
+<li>Customers routed to manual review: 3290 of 8000 (41.1%) vs 394 (4.9%) in the normal scenario</li>
+</ul>
+<h2>11. Where churn-risk targeting and uplift targeting differ</h2>
+<ul>
+<li>Only 65% of the contacted customers are the same under both strategies.</li>
+<li>Churn-risk picks that uplift skips: average TRUE uplift = 5.8 pp (avg usage 49) - high risk, but the offer does little.</li>
+<li>Uplift picks that churn-risk skips: average TRUE uplift = 14.5 pp (avg usage 32) - persuadable customers.</li>
+</ul>
+<h2>12. Assumptions to check before using this on REAL customer data</h2>
+<ol>
+<li><strong>No unmeasured confounding</strong>: all factors that drove both "who got an offer" and "who renewed" are in our features.
+   (If a sales rep used a gut feeling we didn't record, estimates will be biased.)</li>
+<li><strong>Overlap / positivity</strong>: every type of customer had a real chance of both getting and not getting an offer.</li>
+<li><strong>Consistent treatment (SUTVA)</strong>: "offer sent" means the same thing for everyone, and one customer's offer
+   does not change another customer's renewal.</li>
+<li><strong>Correct timing</strong>: features are measured BEFORE the decision; the 30-day window starts at the same date for both groups.</li>
+<li><strong>No post-decision variables</strong> (opens, redemptions) in the model.</li>
+<li><strong>Stable world</strong>: customer behaviour in the future resembles the historical period.</li>
+</ol>
+<h2>13. Proposed randomized pilot</h2>
+<ul>
+<li>Take a fresh group of eligible subscribers (e.g. 10,000).</li>
+<li>Randomly split: 50% policy group (follow the uplift recommendations, within the 20% limit) /
+  50% control group (random 20% get offers, or business-as-usual).</li>
+<li>Run for one renewal window (30 days) and compare renewals and net value between groups.</li>
+<li>Because assignment is random, the difference is a fair test. Roll out only if the policy beats control
+  by a pre-agreed margin; keep some customers randomized permanently to keep monitoring.</li>
+</ul><h2>Charts</h2><p><img src="01_causal_diagram.png" style="max-width:100%"></p><p><img src="02_overlap_normal.png" style="max-width:100%"></p><p><img src="03_uplift_by_band.png" style="max-width:100%"></p><p><img src="04_policy_comparison.png" style="max-width:100%"></p><p><img src="05_overlap_weak_scenario.png" style="max-width:100%"></p></body></html>
